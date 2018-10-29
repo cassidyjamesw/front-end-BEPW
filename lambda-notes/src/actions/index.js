@@ -34,7 +34,7 @@ export const getNotes = () => {
     dispatch({ type: GETTING_NOTES });
 
     axios
-      .get("https://killer-notes.herokuapp.com/note/get/all")
+      .get("http://localhost:9000/api/notes/")
 
       .then(async ({ data }) => {
         await sleep(1000);
@@ -50,7 +50,7 @@ export const getNote = id => {
     dispatch({ type: GETTING_NOTE });
 
     axios
-      .get(`https://killer-notes.herokuapp.com/note/get/${id}`)
+      .get(`http://localhost:9000/api/notes/${id}`)
 
       .then(async ({ data }) => {
         await sleep(1000);
@@ -66,7 +66,7 @@ export const addNote = note => {
     dispatch({ type: ADDING_NOTE });
 
     axios
-      .post("https://killer-notes.herokuapp.com/note/create", note)
+      .post("http://localhost:9000/api/notes/", note)
 
       .then(async () => {
         await sleep(1000);
@@ -82,7 +82,7 @@ export const deleteNote = id => {
     dispatch({ type: DELETING_NOTE });
 
     axios
-      .delete(`https://killer-notes.herokuapp.com/note/delete/${id}`)
+      .delete(`http://localhost:9000/api/notes/${id}`)
 
       .then(async () => {
         await sleep(1000);
@@ -103,10 +103,7 @@ export const updateNote = updatedNote => {
     dispatch({ type: UPDATING_NOTE });
 
     axios
-      .put(
-        `https://killer-notes.herokuapp.com/note/edit/${updatedNote._id}`,
-        updatedNote
-      )
+      .put(`http://localhost:9000/api/notes/${updatedNote._id}`, updatedNote)
 
       .then(async ({ data }) => {
         await sleep(1000);
