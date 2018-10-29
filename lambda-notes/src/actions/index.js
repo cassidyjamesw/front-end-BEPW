@@ -1,89 +1,131 @@
-import React from "react";
 import axios from "axios";
 
-export const FETCHING = "FETCHING";
-export const FETCHED = "FETCHED";
-export const ADDING = "ADDING";
-export const ADDED = "ADDED";
-export const UPDATING = "UPDATING";
-export const UPDATED = "UPDATED";
-export const DELETING = "DELETING";
-export const DELETED = "DELETED";
-export const FETCH_ERROR = "FETCH_ERROR";
-export const ADD_ERROR = "ADD_ERROR";
-export const UPDATE_ERROR = "UPDATE_ERROR";
-export const DELETE_ERROR = "DELETE_ERROR";
+// getNotes
+export const GETTING_NOTES = "GETTING_NOTES";
+export const GOT_NOTES = "GOT_NOTES";
+export const GET_NOTES_ERROR = "GET_NOTES_ERROR";
+// getNote
+export const GETTING_NOTE = "GETTING_NOTE";
+export const GOT_NOTE = "GOT_NOTE";
+export const GET_NOTE_ERROR = "GET_NOTE_ERROR";
+//addNote
+export const ADDING_NOTE = "ADDING_NOTE";
+export const ADDED_NOTE = "ADDED_NOTE";
+export const ADD_NOTE_ERROR = "ADD_NOTE_ERROR";
+// deleteNote
+export const DELETING_NOTE = "DELETING_NOTE";
+export const DELETED_NOTE = "DELETED_NOTE";
+export const DELETE_NOTE_ERROR = "DELETE_NOTE_ERROR";
+// editNote
+export const UPDATING_NOTE = "UPDATING_NOTE";
+export const UPDATED_NOTE = "UPDATED_NOTE";
+export const UPDATE_NOTE_ERROR = "UPDATE_NOTE_ERROR";
+// redirect
+export const SET_REDIRECT = "SET_REDIRECT";
+export const RESET_REDIRECT = "RESET_REDIRECT";
 
-export const SET_UPDATE_NOTE = "SET_UPDATE_NOTE";
+// Loading message tester
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-export const fetchNotes = () => {
+export const getNotes = () => {
   return dispatch => {
-    dispatch({ type: FETCHING });
+    dispatch({ type: GETTING_NOTES });
 
     axios
-      .get("http://localhost:9000/api/notes")
-      .then(response => {
-        dispatch({
-          type: FETCHED,
-          payload: response.data
-        });
+      .get("https://killer-notes.herokuapp.com/note/get/all")
+
+      .then(async ({ data }) => {
+        await sleep(1000);
+        dispatch({ type: GOT_NOTES, payload: data });
       })
-      .catch(err => {
-        console.log(err);
-        dispatch({ type: FETCH_ERROR, payload: err });
-      });
+
+      .catch(error => dispatch({ type: GET_NOTES_ERROR, payload: error }));
   };
 };
 
-export const addNewNote = note => {
+export const getNote = id => {
   return dispatch => {
-    dispatch({ type: ADDING });
+    dispatch({ type: GETTING_NOTE });
+
     axios
-      .post("http://localhost:9000/api/notes", note)
-      .then(response => {
-        console.log(response);
-        dispatch({
-          type: ADDED,
-          payload: response.data
-        }).then(fetchNotes());
+      .get(`https://killer-notes.herokuapp.com/note/get/${id}`)
+
+      .then(async ({ data }) => {
+        await sleep(1000);
+        dispatch({ type: GOT_NOTE, payload: data });
       })
 
-      .catch(err => {
-        console.log(err);
-        dispatch({ type: ADD_ERROR });
-      });
+      .catch(error => dispatch({ type: GET_NOTE_ERROR, payload: error }));
   };
 };
 
-export const deleteNote = noteId => dispatch => {
-  dispatch({ type: DELETING });
-  axios
-    .delete(`http://localhost:9000/api/notes/${noteId}`)
-    .then(response => {
-      dispatch({ type: DELETED, payload: response.data });
-    })
+export const addNote = note => {
+  return dispatch => {
+    dispatch({ type: ADDING_NOTE });
 
-    .catch(err => {
-      dispatch({ type: DELETE_ERROR, payload: err });
-    });
-};
+    axios
+      .post("https://killer-notes.herokuapp.com/note/create", note)
 
-export const setUpdateNote = id => {
-  return {
-    type: SET_UPDATE_NOTE,
-    payload: id
+      .then(async () => {
+        await sleep(1000);
+        dispatch({ type: ADDED_NOTE });
+      })
+
+      .catch(error => dispatch({ type: ADD_NOTE_ERROR, payload: error }));
   };
 };
 
-export const updateNote = note => dispatch => {
-  dispatch({ type: UPDATING });
-  axios
-    .put(`http://localhost:9000/api/notes/${note._id}`, note)
-    .then(response => {
-      dispatch({ type: UPDATED, payload: response.data });
-    })
+export const deleteNote = id => {
+  return dispatch => {
+    dispatch({ type: DELETING_NOTE });
 
-    .catch(err => {
-      dispatch({ type: UPDATE_ERROR, payload: err });
-    });
+    axios
+      .delete(`https://killer-notes.herokuapp.com/note/delete/${id}`)
+
+      .then(async () => {
+        await sleep(1000);
+        dispatch({ type: DELETED_NOTE, payload: {} });
+      })
+
+      .then(async () => {
+        await sleep(1000);
+        dispatch({ type: SET_REDIRECT, payload: "/" });
+      })
+
+      .catch(error => dispatch({ type: DELETE_NOTE_ERROR, payload: error }));
+  };
+};
+
+export const updateNote = updatedNote => {
+  return dispatch => {
+    dispatch({ type: UPDATING_NOTE });
+
+    axios
+      .put(
+        `https://killer-notes.herokuapp.com/note/edit/${updatedNote._id}`,
+        updatedNote
+      )
+
+      .then(async ({ data }) => {
+        await sleep(1000);
+        dispatch({ type: UPDATED_NOTE, payload: data });
+      })
+
+      .catch(error => dispatch({ type: UPDATE_NOTE_ERROR, payload: error }));
+  };
+};
+
+// This feels so hacky but every other solution involved adding new libraries and middleware
+export const setRedirect = url => {
+  return dispatch => {
+    dispatch({ type: SET_REDIRECT, payload: url });
+  };
+};
+
+export const resetRedirect = () => {
+  return dispatch => {
+    dispatch({ type: RESET_REDIRECT });
+  };
 };

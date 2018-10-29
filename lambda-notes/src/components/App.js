@@ -1,49 +1,36 @@
+// Dependencies
 import React, { Component } from "react";
-import { Route, NavLink, withRouter } from "react-router-dom";
-import axios from "axios";
+import { Route } from "react-router-dom";
 import styled from "styled-components";
 
-import NotesListView from "../views/NotesListView";
-import NoteFormView from "../views/NoteFormView";
-import NoteView from "../views/NoteView";
-import "../App.css";
+// Components
+import SideBar from "./SideBar";
+import NoteListPage from "./NoteListPage";
+import NotePage from "./NotePage";
+import NewNotePage from "./NewNotePage";
+// import EditNote from './EditNote';
 
-const Button = styled.button`
-  text-align: center;
-  background-color: #24b8bd;
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  width: 200px;
-  height: 3rem;
-  margin: 0.5rem 0;
-`;
-
-const Heading = styled.h1`
-  color: #474b4c;
-  text-align: left;
+const AppContainer = styled.div`
+  display: flex;
+  max-width: 888px;
+  min-height: 888px;
+  background: #f3f3f3;
+  border: 1px solid #9a9a9a;
+  margin: 0 auto;
 `;
 
 class App extends Component {
-  componentDidMount;
   render() {
     return (
-      <div className="App">
-        <div className="sidebar">
-          <Heading>Lambda Notes</Heading>
-          <NavLink to="/notes" activeClassName="activeNavButton">
-            <Button>View Your Notes</Button>
-          </NavLink>
-          <NavLink to="/addNote" activeClassName="activeNavButton">
-            <Button>+ Create New Note</Button>
-          </NavLink>
-        </div>
-        <Route exact path="/notes" component={NotesListView} />
-        <Route exact path="/addNote" component={NoteFormView} />
-        <Route exact path="/notes/:noteId" component={NoteView} />
-      </div>
+      <AppContainer>
+        <SideBar />
+        <Route exact path="/" component={NoteListPage} />
+        <Route path={`/note/:id`} component={NotePage} />
+        <Route path="/new" component={NewNotePage} />
+        {/* <Route path="/edit" component={EditNote} /> */}
+      </AppContainer>
     );
   }
 }
 
-export default withRouter(App);
+export default App;

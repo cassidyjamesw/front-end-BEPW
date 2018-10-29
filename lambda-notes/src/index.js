@@ -1,23 +1,28 @@
+// Dependencies
 import React from "react";
 import ReactDOM from "react-dom";
-
-import { createStore, applyMiddleware, compose } from "redux";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-import rootReducer from "./reducers/index.js";
-import Root from "./components/Root.js";
-
+import { BrowserRouter as Router } from "react-router-dom";
+// Service Worker
+import registerServiceWorker from "./registerServiceWorker";
+// Reducers
+import rootReducer from "./reducers";
+// Components
+import App from "./components/App";
+// Styles
 import "./index.css";
 
-const reduxDevToolsHook =
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
-const store = createStore(
-  rootReducer,
-  compose(
-    applyMiddleware(logger, thunk),
-    reduxDevToolsHook
-  )
+ReactDOM.render(
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>,
+  document.getElementById("root")
 );
-
-ReactDOM.render(<Root store={store} />, document.getElementById("root"));
+registerServiceWorker();

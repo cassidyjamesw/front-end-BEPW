@@ -1,56 +1,49 @@
-import React, { Fragment } from "react";
-import { Route, Link } from "react-router-dom";
-import PropTypes from "prop-types";
+// Dependencies
+import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const NoteOption = styled.p`
-  text-decoration: underline;
-  padding: 5px;
+const NoteLink = styled(Link)`
+  width: 192px;
+  height: 197px;
+  text-decoration: none;
+  color: black;
+  padding: 10px 20px 0 16px;
+  background: white;
+  border: 1px solid #a5a5a5;
+  margin: 0 16px 24px 0;
 `;
 
-const NoteTitle = styled.h2`
-  color: #474b4c;
+const NoteTitle = styled.h3`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #969696;
+  margin-bottom: 6px;
 `;
+
 const NoteBody = styled.p`
-  color: #474b4c;
+  overflow: hidden;
+  font-size: 1.3rem;
+  line-height: 2.2rem;
 `;
 
-const NoteTag = styled.p`
-  display: flex;
-  background-color: orange;
-  color: white;
-  width: 10%;
-  border-radius: 5px;
-`;
+const truncate = (content, length) => {
+  return content.length > length
+    ? `${content.slice(0, length - 3)} …`
+    : content;
+};
 
-export default function Note(props) {
-  const note = props.notes.find(note => note._id === props.match.params.noteId);
-
-  function handleDelete() {
-    props.handleDeleteNote(note._id);
-    props.history.push("/notes");
-  }
-
-  function handleModal() {
-    props.handleConfirmDelete();
-  }
-
-  if (props.fetchingNotes || props.notes.length === 0)
-    return <h2>Loading data...</h2>;
-
+const Note = props => {
   return (
-    <div className="note-view">
-      <div className="note-options">
-        <NoteOption
-          onClick={event => props.goToUpdateNoteForm(event, note._id)}
-        >
-          edit{" "}
-        </NoteOption>
-        <NoteOption onClick={props.handleConfirmDelete}> delete</NoteOption>
-      </div>
-      <NoteTitle>{note.title}</NoteTitle>
-      <NoteBody>{note.textBody}</NoteBody>
-      <NoteTag>{note.tags}</NoteTag>
-    </div>
+    <NoteLink to={`/note/${props.note._id}`}>
+      <NoteTitle>{props.note.title}</NoteTitle>
+      <NoteBody>{truncate(props.note.textBody, 140)}</NoteBody>
+    </NoteLink>
   );
-}
+};
+
+export default Note;
