@@ -39,7 +39,7 @@ const truncate = (content, length) => {
 
 const Note = props => {
   return (
-    <NoteLink to={`/note/${props.note._id}`}>
+    <NoteLink to={`/note/${props.note.id}`}>
       <NoteTitle>{props.note.title}</NoteTitle>
       <NoteBody>{truncate(props.note.textBody, 140)}</NoteBody>
     </NoteLink>

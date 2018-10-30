@@ -107,7 +107,7 @@ class NotePage extends Component {
         )}
         {this.state.delete && (
           <DeleteNoteModal
-            id={this.props.note._id}
+            id={this.props.note.id}
             returnToNote={this.returnToNote}
           />
         )}

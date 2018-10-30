@@ -103,7 +103,7 @@ export const updateNote = updatedNote => {
     dispatch({ type: UPDATING_NOTE });
 
     axios
-      .put(`http://localhost:9000/api/notes/${updatedNote._id}`, updatedNote)
+      .put(`http://localhost:9000/api/notes/${updatedNote.id}`, updatedNote)
 
       .then(async ({ data }) => {
         await sleep(1000);
