@@ -34,7 +34,7 @@ export const getNotes = () => {
     dispatch({ type: GETTING_NOTES });
 
     axios
-      .get("http://localhost:9000/api/notes/")
+      .get("https://ls-back-end-project-week.herokuapp.com/api/notes/")
 
       .then(async ({ data }) => {
         await sleep(1000);
@@ -50,7 +50,7 @@ export const getNote = id => {
     dispatch({ type: GETTING_NOTE });
 
     axios
-      .get(`http://localhost:9000/api/notes/${id}`)
+      .get(`https://ls-back-end-project-week.herokuapp.com/api/notes/${id}`)
 
       .then(async ({ data }) => {
         await sleep(1000);
@@ -66,7 +66,7 @@ export const addNote = note => {
     dispatch({ type: ADDING_NOTE });
 
     axios
-      .post("http://localhost:9000/api/notes/", note)
+      .post("https://ls-back-end-project-week.herokuapp.com/api/notes/", note)
 
       .then(async () => {
         await sleep(1000);
@@ -82,7 +82,7 @@ export const deleteNote = id => {
     dispatch({ type: DELETING_NOTE });
 
     axios
-      .delete(`http://localhost:9000/api/notes/${id}`)
+      .delete(`https://ls-back-end-project-week.herokuapp.com/api/notes/${id}`)
 
       .then(async () => {
         await sleep(1000);
@@ -103,7 +103,12 @@ export const updateNote = updatedNote => {
     dispatch({ type: UPDATING_NOTE });
 
     axios
-      .put(`http://localhost:9000/api/notes/${updatedNote.id}`, updatedNote)
+      .put(
+        `https://ls-back-end-project-week.herokuapp.com/api/notes/${
+          updatedNote.id
+        }`,
+        updatedNote
+      )
 
       .then(async ({ data }) => {
         await sleep(1000);
